@@ -2,6 +2,8 @@ import React from 'react'
 import {View, Image, ScrollView, Dimensions} from 'react-native'
 import BookReviewCard from './components/BookReviewCard'
 import BookReviewScreen from './components/BookReviewScreen'
+import HomeScreen from './components/HomeScreen'
+import {createStackNavigator} from 'react-navigation'
 
 export default class TestView extends React.Component {
   cardViewStyle = {
@@ -11,22 +13,16 @@ export default class TestView extends React.Component {
   render() {
       // console.warn(Dimensions.get('window').width)
     return (
-      <View style={{backgroundColor: "#F7F9F2", width: "100%", height: "100%"}}>
-          <View style={{width: "100%", aspectRatio: 800/150.0, elevation: 15, backgroundColor: "#33ff22"}}>
-              <Image style={{width: "100%", height: "100%"}} source={require('./res/title-bar.png')} resizeMode={'cover'}/>
-          </View>
-
-          <ScrollView style={{flex: 1}}>
-	          <BookReviewScreen/>
-          </ScrollView>
-
-      </View>
+      <RootStack/>
     )
   }
-
-  cardViewStyle = {
-      margin: 20,
-      marginTop: 5,
-      marginBottom: 5
-  }
 }
+
+const RootStack = createStackNavigator({
+	HomeScreen: {
+		screen: HomeScreen
+	},
+	BookReviewScreen: {
+		screen: BookReviewScreen
+	}
+})
