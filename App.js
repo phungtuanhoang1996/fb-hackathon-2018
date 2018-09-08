@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, Image, ScrollView, Dimensions} from 'react-native'
 import BookReviewCard from './components/BookReviewCard'
+import BookReviewScreen from './components/BookReviewScreen'
 
 export default class TestView extends React.Component {
   cardViewStyle = {
@@ -16,48 +17,7 @@ export default class TestView extends React.Component {
           </View>
 
           <ScrollView style={{flex: 1}}>
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
-	          <BookReviewCard
-		          cardViewStyle={this.cardViewStyle}
-		          name={"Random Book"}
-		          rating={4.27}
-		          reviewCount={"1423"}
-	          />
+	          <BookReviewScreen/>
           </ScrollView>
 
       </View>
