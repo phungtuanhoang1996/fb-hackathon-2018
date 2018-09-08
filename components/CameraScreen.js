@@ -26,24 +26,76 @@ export default class CameraScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {
-            !this.state.ifWaitingForResponse
-            ? (
-                <RNCamera
-                    ref={ref => {
-                        this.camera = ref;
-                    }}
-                    style = {styles.preview}
-                    type={RNCamera.Constants.Type.back}
-                    flashMode={RNCamera.Constants.FlashMode.off}
-                    permissionDialogTitle={'Permission to use camera'}
-                    permissionDialogMessage={'We need your permission to use your camera phone'}
-                />
-            )
-            : (
-                <Image style={styles.takenPicture} source={this.state.takenPicture}/>
-            )
-        }
+        <View style={{flex: 1}}>
+            {
+                !this.state.ifWaitingForResponse
+                ? (
+                    <RNCamera
+                        ref={ref => {
+                            this.camera = ref;
+                        }}
+                        style = {styles.preview}
+                        type={RNCamera.Constants.Type.back}
+                        flashMode={RNCamera.Constants.FlashMode.off}
+                        permissionDialogTitle={'Permission to use camera'}
+                        permissionDialogMessage={'We need your permission to use your camera phone'}
+                    />
+                )
+                : (
+                    <Image style={styles.takenPicture} source={this.state.takenPicture}/>
+                )
+            }
+            
+            {
+                !this.state.ifWaitingForResponse
+                ? (
+                    <View style={styles.previewOverlay}>
+                        <View 
+                            style={{
+                                flex: 1,
+                                borderWidth: 2,
+                                borderStyle: 'dotted',
+                                borderColor: "#FFFFFF",
+                                borderRadius: 10,
+                                margin: 20,
+                                marginRight: 70,
+                                marginLeft: 70,
+                                opacity: 0.5
+                            }}
+                        />
+
+                        <View 
+                            style={{
+                                flex: 1,
+                                borderWidth: 2,
+                                borderRadius: 10,
+                                borderStyle: 'dotted',
+                                borderColor: "#FFFFFF",
+                                margin: 20,
+                                marginRight: 70,
+                                marginLeft: 70,
+                                opacity: 0.5
+                            }}
+                        />
+        
+                        <View 
+                            style={{
+                                flex: 1,
+                                borderWidth: 2,
+                                borderStyle: 'dotted',
+                                borderColor: "#FFFFFF",
+                                borderRadius: 10,
+                                margin: 20,
+                                marginRight: 70,
+                                marginLeft: 70,
+                                opacity: 0.5
+                            }}
+                        />
+                    </View>
+                ) : (null)
+            }
+        </View>
+
         {   
             this.state.ifWaitingForResponse 
             ? (
@@ -52,7 +104,7 @@ export default class CameraScreen extends Component {
                 </View>
             ) 
             : (
-                <View style={{position: 'absolute', bottom: 0, left: 0, width: "100%", justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{flex: 0, justifyContent: 'center', alignItems: 'center'}}>
                     <TouchableOpacity
                         onPress={this.takePicture.bind(this)}
                         style = {styles.capture}
@@ -146,7 +198,38 @@ export default class CameraScreen extends Component {
             bookData: []
         })
     }
+
+    getGridSquareDimension = () => {
+        console.log("Dimension of each square " + screenHeight / 3 - 50)
+        return screenHeight / 3 - 50
+    }
+
+    getGridSquares = () => {
+        let array = [1, 2 ,3]
+
+        array.map((value, key) => {
+            return (
+                <View 
+                    style={{
+                        position: 'absolute',
+                        aspectRatio: 1,
+                        borderWidth: 3,
+                        borderStyle: 'dashed',
+                        borderColor: "#000000",
+                        top: screenHeight / 2 - this.getGridSquareDimension() / 2,
+                        left: screenWidth / 6 * (value * 2 - 1) - this.getGridSquareDimension() / 2,
+                        width: this.getGridSquareDimension()
+                    }}
+                >
+
+                </View>
+            )
+        })
+    }
 }
+
+const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height
 
 const styles = StyleSheet.create({
   container: {
@@ -155,10 +238,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'black'
   },
   preview: {
-    position: "absolute",
-    top: 0, left: 0,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    position: 'absolute',
+    width: '100%',
+    height: '100%', top: 0, left: 0
+  },
+  previewOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%', top: 0, left: 0
+  },
+  gridSquare: {
+    position: 'absolute',
+    aspectRatio: 1,
+    borderWidth: 3,
+    borderStyle: 'dashed',
+    borderColor: "#000000"
   },
   capture: {
     flex: 0,
