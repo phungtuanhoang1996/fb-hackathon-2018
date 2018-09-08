@@ -1,5 +1,5 @@
 import React from 'react'
-import {ScrollView, View, Image, Dimensions} from 'react-native'
+import {ScrollView, View, Image, Dimensions, Text, BackHandler} from 'react-native'
 import BookReviewCard from './BookReviewCard'
 
 export default class BookReviewScreen extends React.Component {
@@ -10,69 +10,27 @@ export default class BookReviewScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            bookData: [
-
-            ]
+            bookData: this.props.navigation.getParam("bookData", [])
         }
+        console.log(this.state.bookData)
     }
 
     componentDidMount() {
-        // this.props.bookISBNs.map((isbn, key) => {
-        //     //do something to get
-        // })
-
-        this.setState({
-            bookData: [
-                {
-                    isbn: '0439136369',
-                    name: 'Kamasutra Book',
-                    rating: 4.75,
-                    reviewCount: 123
-                }, 
-                {
-                    isbn: '0439785960',
-                    name: 'Sex Book',
-                    rating: 3.2,
-                    reviewCount: 1223
-                },
-                {
-                    isbn: '0439064872',
-                    name: 'Random Book',
-                    rating: 4.0,
-                    reviewCount: 1233
-                },
-                {
-                    isbn: '0439064872',
-                    name: 'Random Book',
-                    rating: 4.0,
-                    reviewCount: 1233
-                },
-                {
-                    isbn: '0439064872',
-                    name: 'Random Book',
-                    rating: 4.0,
-                    reviewCount: 1233
-                },
-                {
-                    isbn: '0439064872',
-                    name: 'Random Book',
-                    rating: 4.0,
-                    reviewCount: 1233
-                }
-            ]
-        })
+        BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
     }
 
     render() {
         return(
             <View style={{backgroundColor: "#F7F9F2", width: "100%", height: "100%", flexDirection: 'column'}}>
-                <View style={{width: "100%", aspectRatio: 800/150.0, elevation: 15, backgroundColor: "#33ff22"}}>
-                    <Image style={{width: "100%", height: "100%"}} source={require('../res/title-bar.png')} resizeMode={'cover'}/>
+                <View style={{width: "100%", aspectRatio: 800/150.0, elevation: 15, backgroundColor: "#33ff22", justifyContent: 'center', alignItems: 'center'}}>
+                    <Image style={{width: "100%", height: "100%", zIndex: 1, position: 'absolute'}} source={require('../res/title-bar.png')} resizeMode={'cover'}/>
+                    <Text style={{color: 'white', fontSize: 20, fontWeight: 'bold', zIndex: 2}}>Result</Text>
                 </View>
 
                 <ScrollView style={{flex: 1}}>
                     {
                         this.state.bookData.map((book, key) => {
+                            console.log(this.state.bookData[key])
                             if (key === 0) {
                                 return (
                                     <BookReviewCard
@@ -82,6 +40,7 @@ export default class BookReviewScreen extends React.Component {
                                         name={book.name}
                                         rating={book.rating}
                                         reviewCount={book.reviewCount}
+                                        imageUrl={book.imageUrl}
                                     />
                                 )
                             } else {
@@ -93,6 +52,7 @@ export default class BookReviewScreen extends React.Component {
                                         name={book.name}
                                         rating={book.rating}
                                         reviewCount={book.reviewCount}
+                                        imageUrl={book.imageUrl}
                                     />
                                 )
                             }
@@ -102,6 +62,11 @@ export default class BookReviewScreen extends React.Component {
             </View>
         ) 
     }
+
+    onBackButtonPressAndroid = () => {
+        this.props.navigation.popToTop()
+        return true;
+    };
 
     cardViewStyle = {
         margin: 20,

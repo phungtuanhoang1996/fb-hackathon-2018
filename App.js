@@ -4,6 +4,7 @@ import BookReviewCard from './components/BookReviewCard'
 import BookReviewScreen from './components/BookReviewScreen'
 import HomeScreen from './components/HomeScreen'
 import {createStackNavigator} from 'react-navigation'
+import CameraScreen from './components/CameraScreen'
 
 export default class TestView extends React.Component {
   cardViewStyle = {
@@ -24,5 +25,8 @@ const RootStack = createStackNavigator({
 	},
 	BookReviewScreen: {
 		screen: BookReviewScreen
-	}
+  },
+  CameraScreen: {
+    screen: CameraScreen
+  }
 })

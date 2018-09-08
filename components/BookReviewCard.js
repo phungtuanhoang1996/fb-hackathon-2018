@@ -74,7 +74,7 @@ class BookReviewCard extends React.Component {
                 </View>
 
                 <View style={this.styles.bookCoverEnclosingView}>
-	                <Image style={{height: 100}} source={{uri: "http://covers.openlibrary.org/b/ISBN/" + this.props.isbn +"-M.jpg"}}/>
+	                <Image style={{height: 100}} source={{uri: this.props.imageUrl}}/>
                 </View>
 
             </View>

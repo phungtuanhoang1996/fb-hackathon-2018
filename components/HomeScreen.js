@@ -32,6 +32,6 @@ export default class HomeScreen extends React.Component {
     }
 
     onTakePictureButtonPress = () => {
-        this.props.navigation.navigate('BookReviewScreen')
+        this.props.navigation.navigate('CameraScreen')
     }
 }
