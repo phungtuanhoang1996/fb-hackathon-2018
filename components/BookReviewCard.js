@@ -42,6 +42,16 @@ class BookReviewCard extends React.Component {
 	        elevation: 5,
             flexDirection: 'row',
 	        ...this.props.cardViewStyle
+        }, 
+        enclosingViewRecommended: {
+            backgroundColor: "#FFFFFF",
+            borderRadius: 5,
+            borderWidth: 2,
+            borderColor:'#ACF35A',
+            padding: 10,
+	        elevation: 5,
+            flexDirection: 'row',
+	        ...this.props.cardViewStyle
         },
 	    bookDetailsView: {
             flex: 1,
@@ -66,17 +76,18 @@ class BookReviewCard extends React.Component {
 
     render() {
         return (
-            <View style={this.styles.enclosingView}>
+            <View style={this.props.likey ? this.styles.enclosingViewRecommended : this.styles.enclosingView}>
                 <View style={this.styles.bookDetailsView}>
                     <Text style={this.styles.bookTitleText}>{this.props.name + " (" + this.props.rating + " / 5)"}</Text>
                     {this.getRatingStars(this.props.rating)}
 	                <Text>Review: {this.props.reviewCount}</Text>
+                    {this.props.likey ? <Text style={{color: '#ACF35A'}}>Recommended for you</Text> : null}
+
                 </View>
 
                 <View style={this.styles.bookCoverEnclosingView}>
 	                <Image style={{height: 100}} source={{uri: this.props.imageUrl}}/>
                 </View>
-
             </View>
         )
     }

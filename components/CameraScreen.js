@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import GoodReadApiKey from '../GoodReadApiKey'
 import { RNCamera } from 'react-native-camera';
+import { xmlToBook } from './helpers'
 
 export default class CameraScreen extends Component {
     static navigationOptions = {
@@ -126,7 +127,7 @@ export default class CameraScreen extends Component {
             name: 'test'
         })
     let response = await fetch(
-      "https://d75d2982.ngrok.io/upload_nn",
+      "https://2f214e30.ngrok.io/upload_nn",
       {
         method: "POST",
         body: formData
@@ -143,7 +144,7 @@ export default class CameraScreen extends Component {
     }
   }
 
-    takePicture = async function() {
+    takePicture = async () => {
         if (this.camera) {
             const options = { quality: 0.5, base64: true, fixOrientation: true};
             const data = await this.camera.takePictureAsync(options)
@@ -155,16 +156,20 @@ export default class CameraScreen extends Component {
                 ifWaitingForResponse: true
             })
             const res = await this.sendPicture(data.uri)
+
+            // let callback = this.props.navigation.getParam('callback', null)
+            // callback(data)
+            // this.props.navigation.goBack();
         }
     };
 
     getBookDataFromIsbn = async (jsonResponse) => {
         let newBookData = []
-
+        console.log("LIKY");
+        console.log(jsonResponse.likey)
         for (let i = 0; i < jsonResponse.books.length; i++) {
-            if (parseInt(jsonResponse.books[i]) > 0) {
+            if (true) {
                 let url = "https://www.goodreads.com/search/index.xml?key=" + GoodReadApiKey + "&q=" + jsonResponse.books[i]
-                console.log(url)
                 let response = await fetch(
                     url,
                     {
@@ -173,14 +178,8 @@ export default class CameraScreen extends Component {
                 )
                 console.log("fetch done")
                 let string = await response.text()
-                console.log("parse done" + string)
-                newBookData.push({
-                    isbn: jsonResponse.books[i],
-                    rating: parseFloat(string.split('<average_rating>').pop().split('</average_rating>').shift()),
-                    name: string.split('<title>').pop().split('</title>').shift(),
-                    reviewCount: string.split('<ratings_count type="integer">').pop().split('</ratings_count>').shift(),
-                    imageUrl: string.split('<image_url>').pop().split('</image_url>').shift()
-                })
+                // console.log("parse done" + string)
+                newBookData.push(Object.assign({}, xmlToBook(string,jsonResponse.books[i]), {likey: (jsonResponse.likey && jsonResponse.likey[i]) === 1 ? true : false}))
                 console.log(newBookData)
                 // this.setState({
                 //     bookData: newBookData

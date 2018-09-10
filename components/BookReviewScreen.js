@@ -1,6 +1,9 @@
 import React from 'react'
-import {ScrollView, View, Image, Dimensions, Text, BackHandler} from 'react-native'
+import {ScrollView, View, Image, Dimensions, Text, BackHandler, TouchableOpacity, Button} from 'react-native'
 import BookReviewCard from './BookReviewCard'
+import GoodReadApiKey from '../GoodReadApiKey'
+import { xmlToBook } from './helpers'
+
 
 export default class BookReviewScreen extends React.Component {
     static navigationOptions = {
@@ -10,13 +13,58 @@ export default class BookReviewScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            bookData: this.props.navigation.getParam("bookData", [])
+            bookData: this.props.navigation.getParam("bookData", []),
+            isShowingRecommended: false,
+            isLoading: false
         }
-        console.log(this.state.bookData)
+        // console.log(this.state.bookData)
     }
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
+    }
+
+    getRecommendedBooks = async () => {
+        this.setState({
+            isLoading: true
+        })
+        const rawResponse = await fetch('http://efb38acb.ngrok.io/recommend', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({book_list:this.state.bookData.map((data) => data.name)})
+          });
+        const content = await rawResponse.json();
+
+        let recommendedBooks = content['isbns']
+        let newBookData = []
+
+        for (let i = 0; i < recommendedBooks.length; i++) {
+            if (true) {
+                let url = "https://www.goodreads.com/search/index.xml?key=" + GoodReadApiKey + "&q=" + recommendedBooks[i]
+                let response = await fetch(
+                    url,
+                    {
+                        method: "GET"
+                    }
+                )
+                console.log("fetch done")
+                let string = await response.text()
+                console.log("parse done" + string)
+                newBookData.push(xmlToBook(string,recommendedBooks[i]))
+                // console.log(newBookData)
+                // this.setState({
+                //     bookData: newBookData
+                // })
+            }
+        }
+
+        this.setState({
+            bookData: newBookData,
+            isShowingRecommended: true
+        })
     }
 
     render() {
@@ -30,7 +78,7 @@ export default class BookReviewScreen extends React.Component {
                 <ScrollView style={{flex: 1}}>
                     {
                         this.state.bookData.map((book, key) => {
-                            console.log(this.state.bookData[key])
+                            // console.log(this.state.bookData[key])
                             if (key === 0) {
                                 return (
                                     <BookReviewCard
@@ -41,6 +89,7 @@ export default class BookReviewScreen extends React.Component {
                                         rating={book.rating}
                                         reviewCount={book.reviewCount}
                                         imageUrl={book.imageUrl}
+                                        likey={book.likey}
                                     />
                                 )
                             } else {
@@ -53,12 +102,21 @@ export default class BookReviewScreen extends React.Component {
                                         rating={book.rating}
                                         reviewCount={book.reviewCount}
                                         imageUrl={book.imageUrl}
+                                        likey={book.likey}
                                     />
                                 )
                             }
                         })
                     }
                 </ScrollView>
+                {this.state.isShowingRecommended ? null :
+                    <Button
+                        title={this.state.isLoading ? "Loading...":"View Recommended Books"}
+                        color={'#6200EE'}
+                        onPress={this.getRecommendedBooks}
+                    />
+                }
+                
             </View>
         ) 
     }
